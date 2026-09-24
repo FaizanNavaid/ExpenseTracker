@@ -1,97 +1,138 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# ExpenseTracker
 
-# Getting Started
+A cross-platform personal finance app built with **React Native** and **TypeScript**. Track expenses and income, set budgets, review spending analytics, and use the app in **English or Urdu** (with full RTL support) in light or dark mode.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+<!--
+Add screenshots here once captured, e.g.:
 
-## Step 1: Start Metro
+<p align="center">
+  <img src="docs/screenshots/home.png" width="200" />
+  <img src="docs/screenshots/analytics.png" width="200" />
+  <img src="docs/screenshots/add-expense.png" width="200" />
+</p>
+-->
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Features
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- **Authentication**: sign up, login, OTP verification, forgot and reset password, with a live password-strength checker.
+- **Expenses and income**: add, edit and delete entries with categories and dates. Receipt or photo attachment through camera and gallery.
+- **Transactions**: full history, detail view and search.
+- **Budgets and categories**: manage spending categories and budgets.
+- **Analytics**: visual overview of spending.
+- **Profile**: edit profile and avatar.
+- **Theming**: light and dark mode with a persisted preference.
+- **Localization**: English and Urdu via i18next, with automatic RTL layout switching.
+- **Onboarding and splash flow** for first launch.
+
+## Tech Stack
+
+| Area | Technology |
+| --- | --- |
+| Framework | React Native 0.83, React 19 |
+| Language | TypeScript |
+| Navigation | React Navigation 7 (native stack, bottom tabs, drawer) |
+| State management | Redux Toolkit, React Redux |
+| Networking | Axios with request/response interceptors |
+| Secure storage | `react-native-keychain` (auth session) |
+| Local storage | `react-native-mmkv` (preferences, theme, language) |
+| Localization | i18next, react-i18next (EN / UR, RTL) |
+| Animations and gestures | Reanimated, Gesture Handler |
+| Device APIs | Image Picker, Permissions, NetInfo, Device Info |
+| Tooling | ESLint, Prettier, Jest |
+
+## Architecture Highlights
+
+- **Feature-based folder structure**: screens, components, config and services are cleanly separated.
+- **Centralized API layer** (`src/services/api`): a single Axios instance handles auth headers, error handling and automatic token refresh on `401` responses.
+- **Secure session handling**: the auth session is stored in the OS keychain/keystore, not in plain storage.
+- **Typed navigation**: screen names are defined as constants and reused across all navigators.
+- **Reusable UI components**: shared input fields, buttons, headers, loaders and a custom tab bar.
+- **Form validation models**: validation messages are kept separate from screen logic and are localized.
+- **Theme and language as global state** via Redux slices, persisted with MMKV.
+
+## Project Structure
+
+```
+src/
+├── auth/            # Login, sign up, OTP, forgot/reset password
+├── screens/         # Tab, stack and drawer screens
+├── components/      # Reusable UI components
+├── config/
+│   ├── navigation/  # Stack, tab and drawer navigators
+│   ├── redux/       # Store, slices, typed hooks
+│   └── localization/# i18n setup, en.json, ur.json
+├── models/          # Validation models
+├── services/
+│   ├── api/         # Axios provider and API helper
+│   ├── helper/      # Shared helpers
+│   ├── storage/     # MMKV wrapper
+│   └── utils/       # Theme, colors, RTL, language, error handling
+└── types/
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20 or later
+- React Native development environment ([setup guide](https://reactnative.dev/docs/set-up-your-environment))
+- Xcode and CocoaPods (iOS), Android Studio and JDK (Android)
+
+### Installation
 
 ```sh
-# Using npm
+git clone https://github.com/FaizanNavaid/ExpenseTracker.git
+cd ExpenseTracker
+npm install
+```
+
+### Environment variables
+
+Copy the example file and set your backend URL:
+
+```sh
+cp .env.example .env
+```
+
+```
+BASE_API_URL=https://your-api-host.example.com
+```
+
+> The app expects a compatible REST backend. The backend is not part of this repository.
+
+### Run the app
+
+```sh
+# Start Metro
 npm start
 
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+# Android
 npm run android
 
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
+# iOS (first time and after native dependency changes)
 bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+cd ios && bundle exec pod install && cd ..
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## Scripts
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+| Command | Description |
+| --- | --- |
+| `npm start` | Start the Metro bundler |
+| `npm run android` | Build and run on Android |
+| `npm run ios` | Build and run on iOS |
+| `npm run lint` | Lint the codebase |
+| `npm test` | Run Jest tests |
 
-## Step 3: Modify your app
+## Roadmap
 
-Now that you have successfully run the app, let's make changes!
+- Unit and integration test coverage for core flows
+- Offline support and sync
+- Export reports (CSV / PDF)
+- Recurring transactions
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Author
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+**Faizan Navaid**
+GitHub: [@FaizanNavaid](https://github.com/FaizanNavaid)
